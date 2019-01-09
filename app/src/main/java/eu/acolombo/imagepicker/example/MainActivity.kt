@@ -38,20 +38,12 @@ class MainActivity : AppCompatActivity() {
             imagePicker.showGalleryPicker()
         }
 
-        buttonFile.setOnClickListener {
-            imagePicker.showFilePicker()
-        }
-
         buttonCameraPicker.setOnClickListener {
-            imagePicker.showGenericPicker("Select image", true, false)
+            imagePicker.showGenericPicker("Select image", true)
         }
 
         buttonGalleryPicker.setOnClickListener {
-            imagePicker.showGenericPicker("Select image", false, false)
-        }
-
-        buttonFilePicker.setOnClickListener {
-            imagePicker.showGenericPicker("Select file", true, true)
+            imagePicker.showGenericPicker("Select image", false)
         }
 
     }
