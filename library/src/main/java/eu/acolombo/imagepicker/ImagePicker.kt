@@ -11,14 +11,11 @@ import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
-import android.widget.Toast
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
 import com.yalantis.ucrop.UCrop.RESULT_ERROR
-import com.yalantis.ucrop.UCropFragment
 import eu.acolombo.imagepicker.ImagePickerIntents.getPickerIntents
 import java.io.File
-
 
 /**
  * Usage: Create new instance, call [.showGalleryPicker] or [.showCameraPicker]
@@ -33,11 +30,6 @@ class ImagePicker(private val activity: Activity, private val listener: ImagePic
         private const val REQUEST_CAPTURE = 101
         private const val REQUEST_GALLERY = 102
         private const val REQUEST_FILE = 103
-
-        private const val RESULT_CROP = 200
-
-        const val EXTRA_IMAGE_CROP_URI = "extra_image"
-        const val EXTRA_ERROR = "extra_error"
     }
 
     private var imageUri: Uri? = null
@@ -90,45 +82,34 @@ class ImagePicker(private val activity: Activity, private val listener: ImagePic
             RESULT_OK -> when (requestCode) {
                 REQUEST_CAPTURE -> startCrop(imageUri ?: data?.data)
                 REQUEST_GALLERY -> startCrop(data?.data)
-                REQUEST_CROP -> listener.onImagePicked(UCrop.getOutput(data!!)!!) //TODO Manage null
+                REQUEST_CROP -> data?.let { listener.onImagePicked(UCrop.getOutput(it)!!) }
             }
 
-            RESULT_CROP -> {
-                val imageCrop: String? = data?.extras?.getString(EXTRA_IMAGE_CROP_URI)
-                imageCrop?.let { listener.onImagePicked(Uri.parse(it)) } ?: showError()
-                if (data?.extras?.getBoolean(EXTRA_ERROR) == true) showError()
-            }
-
-            RESULT_ERROR -> showError()
+            RESULT_ERROR -> listener.onImagePickerError()
         }
     }
 
     private fun startCrop(resultImageUri: Uri?) {
         resultImageUri?.let {
             when {
-                skipCrop -> listener.onImagePicked(resultImageUri)
-                else -> UCrop.of(
-                    resultImageUri,
-                    Uri.fromFile(File(activity.cacheDir, System.currentTimeMillis().toString() + ".jpg"))
-                ).withOptions(uCropOptions).start(activity)
+                skipCrop -> listener.onImagePicked(it)
+                else -> getUCrop(it).start(activity)
             }
-        } ?: showError()
+        } ?: listener.onImagePickerError()
     }
 
-    private fun showError() {
-        Toast.makeText(activity, activity.getString(R.string.error_image_picker), Toast.LENGTH_SHORT).show()
+    private fun getUCrop(resultImageUri: Uri) : UCrop {
+        return UCrop.of(
+            resultImageUri,
+            Uri.fromFile(File(activity.cacheDir, System.currentTimeMillis().toString() + ".jpg"))
+        ).withOptions(uCropOptions)
     }
 
-    override fun setDefaultCropConfiguration(cropOptions: UCrop.Options): ImagePicker {
+    override fun setupCrop(cropOptions: UCrop.Options): ImagePicker {
         skipCrop = false
         uCropOptions = cropOptions
         return this
     }
-
-    override fun getCustomCropFragment(square: Boolean, color: Int): UCropFragment {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     override fun showGenericPicker(pickerTitle: String, includeCamera: Boolean, includeDocuments: Boolean) {
         activity.startActivityForResult(getPickerIntents(activity, pickerTitle, includeCamera, includeDocuments), REQUEST_GALLERY)

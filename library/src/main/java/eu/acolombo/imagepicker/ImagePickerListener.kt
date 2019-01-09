@@ -6,4 +6,6 @@ interface ImagePickerListener {
 
     fun onImagePicked(imageUri: Uri)
 
+    fun onImagePickerError()
+
 }

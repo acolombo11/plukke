@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.yalantis.ucrop.UCrop
 import eu.acolombo.imagepicker.ImagePicker
 import eu.acolombo.imagepicker.ImagePickerListener
@@ -23,7 +24,11 @@ class MainActivity : AppCompatActivity() {
             override fun onImagePicked(imageUri: Uri) {
                 imagePicked.load(imageUri)
             }
-        }).setDefaultCropConfiguration(uCropOptions)
+
+            override fun onImagePickerError() {
+                Toast.makeText(this@MainActivity, "error", Toast.LENGTH_SHORT).show()
+            }
+        }).setupCrop(uCropOptions)
 
         buttonCamera.setOnClickListener {
             imagePicker.showCameraPicker()
