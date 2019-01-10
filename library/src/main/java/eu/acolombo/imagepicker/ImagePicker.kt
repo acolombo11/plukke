@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import com.yalantis.ucrop.UCrop
@@ -108,7 +109,7 @@ class ImagePicker(private val activity: Activity, private val listener: ImagePic
         }
     }
 
-    override fun handleActivityResult(resultCode: Int, requestCode: Int, data: Intent?) {
+    override fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (resultCode) {
             RESULT_OK -> when (requestCode) {
                 REQUEST_CAPTURE -> startCrop(data?.data ?: imageUri)

@@ -16,6 +16,6 @@ interface ImagePickerContract {
 
     fun handlePermission(requestCode: Int, grantResults: IntArray)
 
-    fun handleActivityResult(resultCode: Int, requestCode: Int, data: Intent?)
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     
 }
