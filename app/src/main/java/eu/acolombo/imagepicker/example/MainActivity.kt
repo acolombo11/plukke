@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         imagePicker = ImagePicker(this, object : ImagePickerListener {
             override fun onImagePicked(imageUri: Uri) {
                 imagePicked.load(imageUri)
+                url.text = imageUri.toString()
             }
 
             override fun onImagePickerError() {
