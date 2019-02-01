@@ -3,7 +3,7 @@ package eu.acolombo.imagepicker.example
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.yalantis.ucrop.UCrop
 import eu.acolombo.imagepicker.ImagePicker
