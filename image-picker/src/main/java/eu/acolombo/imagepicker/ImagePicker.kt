@@ -1,17 +1,18 @@
 package eu.acolombo.imagepicker
 
-import android.content.Intent
 import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.TakePicturePreview
-import eu.acolombo.imagepicker.ActivityResultContracts.Chooser
-import eu.acolombo.imagepicker.ActivityResultContracts.Picker
+import eu.acolombo.imagepicker.ActivityResultContracts.ChooseContracts
+import eu.acolombo.imagepicker.ActivityResultContracts.PickImage
 
 fun ComponentActivity.pickImage(
-    intents: List<Intent> = imagePickers, onPick: (Any?) -> Unit
+    intents: List<ActivityResultContract<*, *>> = listOf(TakePicturePreview(), PickImage()),
+    onPick: (Any?) -> Unit
 ) {
 
-    registerForActivityResult(Chooser()) { intent ->
+    registerForActivityResult(ChooseContracts()) { intent ->
         onPick(
             intent?.clipData?.items?.map { it.uri.toString() }?.toList()?.first()
                 ?: intent?.dataString
@@ -20,10 +21,3 @@ fun ComponentActivity.pickImage(
     }.launch(intents)
 
 }
-
-
-private val ComponentActivity.imagePickers
-    get() = listOf(
-        TakePicturePreview().createIntent(this, null),
-        Picker().createIntent(this, Unit)
-    )
