@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="eu.acolombo.imagepicker">
+    package="eu.acolombo.imagepicker">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <application>
-
-        <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="@string/authority_file_provider"
-                android:exported="false"
-                android:grantUriPermissions="true"
-                tools:replace="android:authorities">
-            <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths"
-                    tools:replace="android:resource"/>
-        </provider>
-
-        <activity
-                android:name="com.yalantis.ucrop.UCropActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-    </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

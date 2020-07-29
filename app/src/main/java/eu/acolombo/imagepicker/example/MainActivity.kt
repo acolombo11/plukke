@@ -1,62 +1,28 @@
 package eu.acolombo.imagepicker.example
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Toast
-import com.yalantis.ucrop.UCrop
 import eu.acolombo.imagepicker.ImagePicker
-import eu.acolombo.imagepicker.ImagePickerListener
+import eu.acolombo.imagepicker.pick
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var imagePicker: ImagePicker
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val uCropOptions = UCrop.Options().apply { setFreeStyleCropEnabled(true) }
+        buttonPhoto.setOnClickListener { pick(ImagePicker.Photo(this)) { image.load(it) } }
 
-        imagePicker = ImagePicker(this, object : ImagePickerListener {
-            override fun onImagePicked(imageUri: Uri) {
-                imagePicked.load(imageUri)
-                url.text = imageUri.toString()
-            }
+        buttonCapture.setOnClickListener { pick(ImagePicker.Capture) { image.load(it) } }
 
-            override fun onImagePickerError() {
-                Toast.makeText(this@MainActivity, "error", Toast.LENGTH_SHORT).show()
-            }
-        }).setupCrop(uCropOptions)
+        buttonGallery.setOnClickListener { pick(ImagePicker.Pick) { image.load(it) } }
 
-        buttonCamera.setOnClickListener {
-            imagePicker.showCameraPicker()
-        }
+        buttonContent.setOnClickListener { pick(ImagePicker.Content) { image.load(it) } }
 
-        buttonGallery.setOnClickListener {
-            imagePicker.showGalleryPicker()
-        }
+        buttonMultiple.setOnClickListener { pick(ImagePicker.MultipleContent) { image.load(it.getOrNull(1) ?: it.first()) } }
 
-        buttonCameraPicker.setOnClickListener {
-            imagePicker.showGenericPicker("Select image", true)
-        }
+        buttonPicker.setOnClickListener { pick(ImagePicker.Picker()) { image.load(it.first()) } }
 
-        buttonGalleryPicker.setOnClickListener {
-            imagePicker.showGenericPicker("Select image", false)
-        }
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        imagePicker.handleActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        imagePicker.handlePermission(requestCode, grantResults)
     }
 
 }

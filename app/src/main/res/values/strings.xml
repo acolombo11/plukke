@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Image Picker Example</string>
-
-    <string name="authority_file_provider" translatable="false">eu.acolombo.imagepicker.fileprovider</string>
 </resources>

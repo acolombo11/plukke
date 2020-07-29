@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal">
-
-        <Button
-                android:id="@+id/buttonCamera"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Camera"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
         <Button
-                android:id="@+id/buttonCameraPicker"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Camera Pick"/>
-    </LinearLayout>
-
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal">
+            android:id="@+id/buttonPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photo" />
 
         <Button
-                android:id="@+id/buttonGallery"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gallery"/>
+            android:id="@+id/buttonCapture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Capture" />
 
         <Button
-                android:id="@+id/buttonGalleryPicker"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gallery Pick"/>
+            android:id="@+id/buttonGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gallery" />
+
+        <Button
+            android:id="@+id/buttonContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Content" />
+
+        <Button
+            android:id="@+id/buttonMultiple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Multiple" />
+
+        <Button
+            android:id="@+id/buttonPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dialog" />
+
     </LinearLayout>
 
     <ImageView
-            android:id="@+id/imagePicked"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <TextView
-            android:id="@+id/url" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:gravity="center"/>
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="center"
+        android:contentDescription="Picked Image" />
 
 </LinearLayout>

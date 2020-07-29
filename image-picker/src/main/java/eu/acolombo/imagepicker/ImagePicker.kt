@@ -1,126 +1,99 @@
 package eu.acolombo.imagepicker
 
-import android.Manifest
-import android.app.Activity
-import android.app.Activity.RESULT_OK
+import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.Intent.ACTION_GET_CONTENT
+import android.content.Intent.ACTION_PICK
+import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Environment
+import android.os.Build.VERSION_CODES.JELLY_BEAN_MR2
 import android.provider.MediaStore
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import com.yalantis.ucrop.UCrop
-import com.yalantis.ucrop.UCrop.REQUEST_CROP
-import com.yalantis.ucrop.UCrop.RESULT_ERROR
-import eu.acolombo.imagepicker.ImagePickerIntents.getPickerIntents
-import java.io.File
+import android.provider.MediaStore.ACTION_IMAGE_CAPTURE
+import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
+import com.afollestad.inlineactivityresult.startActivityForResult
 
-/**
- * Usage: Create new instance, call [.showGalleryPicker] or [.showCameraPicker]
- * override [Activity.onActivityResult], call [.handleActivityResult] in it
- * override [Activity.onRequestPermissionsResult], call [.handlePermission] in it
- * get picked file with [.getImageFile]
- */
-class ImagePicker(private val activity: Activity, private val listener: ImagePickerListener) : ImagePickerContract {
+sealed class ImagePicker<T>(val intent: Intent, private val requestCode: Int) {
 
-    companion object {
-        private const val REQUEST_PERMISSION_START_CAMERA = 99
-        private const val REQUEST_PERMISSION_START_PICKER = 100
-        private const val REQUEST_CAPTURE = 101
+    // High Quality //https://stackoverrun.com/it/q/8987386 //TODO Not working, trying to not request permissions, in the end we might have to
+    class Photo(
+        private val activity: FragmentActivity,
+        private var uri: Uri? = activity.contentResolver.insert(
+            EXTERNAL_CONTENT_URI, ContentValues(1).apply {
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+            })
+    ) : ImagePicker<Bitmap>(
+        Intent(ACTION_IMAGE_CAPTURE).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
+            putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        },
+        68
+    ) {
+        override fun getData(data: Intent?): Bitmap? =
+            data?.extras?.get("data") as? Bitmap
     }
 
-    private var imageUri: Uri? = null
-    private var skipCrop: Boolean = true
-    private var uCropOptions: UCrop.Options = UCrop.Options()
-    private var mPickerTitle: String = ""
+    object Content : ImagePicker<String>(
+        Intent(ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+        }, 67
+    ) {
+        override fun getData(data: Intent?): String? = getStringData(data)?.first()
+    }
 
-    override fun showGenericPicker(pickerTitle: String, includeCamera: Boolean) {
-        mPickerTitle = pickerTitle
+    @RequiresApi(JELLY_BEAN_MR2)
+    object MultipleContent : ImagePicker<List<String>>(
+        (Content.intent.clone() as Intent).apply {
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        }, 66
+    ) {
+        override fun getData(data: Intent?): List<String>? = getStringData(data)
+    }
 
-        fun showPicker() = activity.startActivityForResult(getPickerIntents(activity, pickerTitle, getNewImageUri()), REQUEST_CAPTURE)
+    // Low quality //TODO Deprecate to use High Quality when working
+    object Capture : ImagePicker<Bitmap>(
+        Intent(ACTION_IMAGE_CAPTURE),
+        65
+    ) {
+        override fun getData(data: Intent?): Bitmap? =
+            data?.extras?.get("data") as? Bitmap
+    }
 
-        if (includeCamera) {
-            if (hasCameraPermission()) showPicker() else requestCameraPermission(REQUEST_PERMISSION_START_PICKER)
-        } else {
-            showPicker()
+    object Pick : ImagePicker<Uri>(
+        Intent(ACTION_PICK, EXTERNAL_CONTENT_URI),
+        64
+    ) {
+        override fun getData(data: Intent?): Uri? =
+            data?.data
+    }
+
+    class Picker(
+        others: List<ImagePicker<*>> = listOf(Capture, Pick),
+        title: String? = null
+    ) : ImagePicker<List<Any>>(Intent(Intent.ACTION_CHOOSER).apply {
+        putExtra(Intent.EXTRA_INTENT, others.first().intent)
+        putExtra(Intent.EXTRA_INITIAL_INTENTS, others.drop(1).map { it.intent }.toTypedArray())
+        title?.let { putExtra(Intent.EXTRA_TITLE, title) }
+    }, 69) {
+        override fun getData(data: Intent?): List<Any>? =
+            getStringData(data) ?: Capture.getData(data)?.let { listOf(it) }
+    }
+
+    abstract fun getData(data: Intent?): T?
+
+    protected fun getStringData(data: Intent?): List<String>? = data?.clipData?.let { clip ->
+        return clip.items.map { it.uri.toString() }.toList()
+    } ?: data?.dataString?.let { string ->
+        return listOf(string)
+    }
+
+    fun pick(activity: FragmentActivity, select: (T) -> Unit) {
+        activity.startActivityForResult(intent, requestCode) { success, data ->
+            if (success) getData(data)?.let { select(it) }
         }
-    }
-
-    override fun showGalleryPicker(): Unit = activity.run {
-        val pickPicture = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        pickPicture.resolveActivity(packageManager)?.run {
-            startActivityForResult(pickPicture, REQUEST_CAPTURE)
-        }
-    }
-
-    override fun showCameraPicker() {
-        if (hasCameraPermission()) startCamera() else requestCameraPermission(REQUEST_PERMISSION_START_CAMERA)
-    }
-
-    private fun hasCameraPermission() = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-
-    private fun requestCameraPermission(requestCode: Int = 0) = ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), requestCode)
-
-    private fun startCamera() = activity.run {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.resolveActivity(packageManager)?.let {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, getNewImageUri())
-            startActivityForResult(intent, REQUEST_CAPTURE)
-        } ?: listener.onImagePickerError()
-    }
-
-    private fun startCrop(resultImageUri: Uri?) {
-        resultImageUri?.let {
-            when {
-                skipCrop -> listener.onImagePicked(it)
-                else -> getUCrop(it).start(activity)
-            }
-        } ?: listener.onImagePickerError()
-    }
-
-    private fun getUCrop(resultImageUri: Uri): UCrop {
-        return UCrop.of(
-                resultImageUri,
-                Uri.fromFile(File(activity.cacheDir, System.currentTimeMillis().toString() + ".jpg"))
-        ).withOptions(uCropOptions)
-    }
-
-    override fun setupCrop(cropOptions: UCrop.Options): ImagePicker {
-        skipCrop = false
-        uCropOptions = cropOptions
-        return this
-    }
-
-    private fun getNewImageUri(): Uri {
-        val pictureFileName = System.currentTimeMillis().toString() + ".jpg"
-        val pictureFile = File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), pictureFileName)
-        return FileProvider.getUriForFile(activity, activity.getString(R.string.authority_file_provider), pictureFile).apply {
-            imageUri = this
-        }
-    }
-
-    override fun handlePermission(requestCode: Int, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_PERMISSION_START_CAMERA -> if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) startCamera()
-            REQUEST_PERMISSION_START_PICKER -> showGenericPicker(mPickerTitle, grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED)
-        }
-    }
-
-    override fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (resultCode) {
-            RESULT_OK -> when (requestCode) {
-                REQUEST_CAPTURE -> startCrop(data?.data ?: imageUri)
-                REQUEST_CROP -> data?.let { listener.onImagePicked(UCrop.getOutput(it)!!) }
-            }
-
-            RESULT_ERROR -> {
-                listener.onImagePickerError()
-            }
-        }
-        imageUri = null
     }
 
 }
