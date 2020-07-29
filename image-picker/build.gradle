@@ -29,7 +29,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
-
-    implementation 'com.afollestad.inline-activity-result:core:0.2.0'
+    
+    implementation "androidx.fragment:fragment-ktx:1.3.0-alpha07"
 
 }

@@ -19,36 +19,6 @@
             android:layout_height="wrap_content"
             android:text="Photo" />
 
-        <Button
-            android:id="@+id/buttonCapture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Capture" />
-
-        <Button
-            android:id="@+id/buttonGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gallery" />
-
-        <Button
-            android:id="@+id/buttonContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Content" />
-
-        <Button
-            android:id="@+id/buttonMultiple"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Multiple" />
-
-        <Button
-            android:id="@+id/buttonPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dialog" />
-
     </LinearLayout>
 
     <ImageView
