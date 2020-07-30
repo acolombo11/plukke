@@ -8,44 +8,70 @@
     tools:context=".MainActivity"
     tools:ignore="ContentDescription">
 
-    <ImageView
-        android:id="@+id/imageChoose"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:scaleType="center"
-        android:src="@drawable/ic_add_photo"
-        app:layout_constraintEnd_toStartOf="@+id/imageTakePicture"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPicker"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/space_xl"
+        android:layout_marginTop="@dimen/space_xl"
+        android:layout_marginBottom="@dimen/space_s"
+        app:layout_constraintBottom_toTopOf="@+id/cardCamera"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="p">
 
-    <Button
-        android:id="@+id/buttonChoose"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Choose"
-        app:layout_constraintBottom_toBottomOf="@id/imageChoose"
-        app:layout_constraintEnd_toEndOf="@id/imageChoose"
-        app:layout_constraintStart_toStartOf="@id/imageChoose" />
+        <TextView
+            style="@style/Plukke.Code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/code_picker" />
 
-    <ImageView
-        android:id="@+id/imageTakePicture"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:scaleType="center"
-        android:src="@drawable/ic_add_photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageChoose" />
+        <ImageView
+            android:id="@+id/imagePicker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
-    <Button
-        android:id="@+id/buttonTakePicture"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Take Picture"
-        app:layout_constraintBottom_toBottomOf="@id/imageTakePicture"
-        app:layout_constraintEnd_toEndOf="@id/imageTakePicture"
-        app:layout_constraintStart_toStartOf="@id/imageTakePicture" />
+        <TextView
+            style="@style/Plukke.Flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="@string/flag_picker"
+            android:textColor="@android:color/white" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardCamera"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/space_xl"
+        android:layout_marginTop="@dimen/space_s"
+        android:layout_marginBottom="@dimen/space_xl"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardPicker"
+        tools:targetApi="p">
+
+        <TextView
+            style="@style/Plukke.Code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/code_camera" />
+
+        <ImageView
+            android:id="@+id/imageCamera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            style="@style/Plukke.Flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="@string/flag_camera"
+            android:textColor="@android:color/black" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

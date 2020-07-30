@@ -1,7 +1,76 @@
-<resources>
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Plukke" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:fontFamily">@font/spacemono_regular</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorBackground
+        </item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?attr/isLightTheme
+        </item>
+
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorBackground</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
+
+        <item name="android:actionBarStyle">@style/Plukke.ActionBar</item>
+        <item name="actionBarStyle">@style/Plukke.ActionBar</item>
+        <item name="cardViewStyle">@style/Widget.Plukke.Card</item>
+        <item name="bottomSheetDialogTheme">@style/Plukke.Dialog</item>
     </style>
+
+    <!-- This will override the Alert Dialog theme -->
+
+    <style name="Plukke.Dialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Plukke.BottomSheet</item>
+    </style>
+
+    <style name="Plukke.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="android:fontFamily">@font/spacemono_bold</item>
+    </style>
+
+    <style name="Plukke.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/Plukke.Light.ActionBar.TitleText</item>
+        <item name="titleTextStyle">@style/Plukke.Light.ActionBar.TitleText</item>
+        <item name="android:paddingTop">@dimen/space_l</item>
+        <item name="android:paddingStart">@dimen/space_s</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="Plukke.Code">
+        <item name="android:layout_gravity">top|bottom</item>
+        <item name="android:layout_margin">@dimen/space_xl</item>
+        <item name="android:alpha">.5</item>
+        <item name="android:textSize">12sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">12sp</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+    </style>
+
+    <style name="Plukke.Flag">
+        <item name="android:layout_gravity">end|bottom</item>
+        <item name="android:layout_marginEnd">@dimen/space_xl</item>
+        <item name="android:paddingLeft">@dimen/space_l</item>
+        <item name="android:paddingRight">@dimen/space_l</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Plukke.Light.ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/spacemono_bold</item>
+    </style>
+
+    <style name="Widget.Plukke.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/colorCardBackground</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="p">@color/colorShadow</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">@color/colorShadow</item>
+        <item name="cardCornerRadius">@dimen/space_m</item>
+        <item name="cardElevation">@dimen/space_xl</item>
+    </style>
+
 </resources>

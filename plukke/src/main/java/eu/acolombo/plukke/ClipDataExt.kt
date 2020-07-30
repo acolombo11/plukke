@@ -1,4 +1,4 @@
-package eu.acolombo.imagepicker
+package eu.acolombo.plukke
 
 import android.content.ClipData
 

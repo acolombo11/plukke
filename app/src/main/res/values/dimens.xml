@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_l">20dp</dimen>
+    <dimen name="space_m">18dp</dimen>
+    <dimen name="space_s">12dp</dimen>
+    <dimen name="space_xs">8dp</dimen>
+</resources>

@@ -1,4 +1,4 @@
-package eu.acolombo.imagepicker
+package eu.acolombo.plukke
 
 import android.app.Activity.RESULT_OK
 import android.content.ContentValues

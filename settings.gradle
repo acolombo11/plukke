@@ -1,2 +1,2 @@
-include ':app', ':image-picker'
+include ':app', ':plukke'
 rootProject.name='image-picker-library'

@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Image Picker Example</string>
+    <string name="app_name">Plukke</string>
+
+    <string name="code_picker">buttonPicker.setOnClickListener {\n\t\tpickImage {\n\t\t\t\timage.load(it)\n\t\t}\n}</string>
+    <string name="code_camera">buttonCamera.setOnClickListener {\n\t\ttakePicture {\n\t\t\t\timage.load(it)\n\t\t}\n}</string>
+    <string name="flag_picker">Pick any</string>
+    <string name="flag_camera">Take photo</string>
 </resources>

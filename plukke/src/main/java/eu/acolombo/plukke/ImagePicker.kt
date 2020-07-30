@@ -1,4 +1,4 @@
-package eu.acolombo.imagepicker
+package eu.acolombo.plukke
 
 import android.app.Activity
 import android.content.ContentValues
@@ -8,9 +8,9 @@ import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import eu.acolombo.imagepicker.ActivityResultContracts.Choose
-import eu.acolombo.imagepicker.ActivityResultContracts.PickImage
-import eu.acolombo.imagepicker.ActivityResultContracts.TakePhoto
+import eu.acolombo.plukke.ActivityResultContracts.Choose
+import eu.acolombo.plukke.ActivityResultContracts.PickImage
+import eu.acolombo.plukke.ActivityResultContracts.TakePhoto
 
 fun ComponentActivity.pickImage(onResult: (Any?) -> Unit) {
     val photo = TakePhoto(this)
