@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorCardBackground">#111111</color>
+    <color name="colorSurface">#161616</color>
     <color name="colorBackground">@android:color/black</color>
 </resources>
