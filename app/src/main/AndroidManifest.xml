@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Plukke"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="eu.acolombo.plukke.example.MainActivity">
+        <activity android:name="eu.acolombo.plukke.example.DemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

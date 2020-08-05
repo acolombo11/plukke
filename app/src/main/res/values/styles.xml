@@ -20,10 +20,17 @@
         <item name="cardViewStyle">@style/Widget.Plukke.Card</item>
     </style>
 
+    <style name="Plukke.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/TextAppearance.Plukke.Widget.ActionBar.TitleText</item>
+        <item name="titleTextStyle">@style/TextAppearance.Plukke.Widget.ActionBar.TitleText</item>
+        <item name="android:paddingTop">@dimen/space_l</item>
+        <item name="android:paddingStart">@dimen/space_s</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
     <style name="Plukke.Code">
         <item name="android:layout_gravity">top|bottom</item>
         <item name="android:layout_margin">@dimen/space_xl</item>
-        <item name="android:alpha">.5</item>
         <item name="android:textSize">12sp</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMaxTextSize">12sp</item>

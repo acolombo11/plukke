@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorShadow">#80000000</color>
+
+    <color name="colorVariable">#9876AA</color>
+    <color name="colorExtension">#FFC66D</color>
+    <color name="colorTodo">#BBB529</color>
 </resources>

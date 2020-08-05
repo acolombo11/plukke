@@ -2,7 +2,6 @@ package eu.acolombo.plukke
 
 import android.app.Activity
 import android.content.ContentValues
-import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 import androidx.activity.ComponentActivity
@@ -12,18 +11,15 @@ import eu.acolombo.plukke.ActivityResultContracts.Choose
 import eu.acolombo.plukke.ActivityResultContracts.PickImage
 import eu.acolombo.plukke.ActivityResultContracts.TakePhoto
 
-fun ComponentActivity.pickImage(onResult: (Any?) -> Unit) {
+
+fun ComponentActivity.pickImage(onResult: (Uri) -> Unit) {
     val photo = TakePhoto(this)
     val image = PickImage()
 
     registerForActivityResult(Choose()) { result ->
         onResult(
             if (result.resultCode == Activity.RESULT_OK) result.data.let { intent ->
-                intent?.clipData?.items?.map { it.uri.toString() }?.toList()?.first()
-                    ?: intent?.dataString
-                    ?: intent?.extras?.get("data") as? Bitmap
-                    ?: photo.uri
-                    ?: return@registerForActivityResult
+                intent?.data ?: photo.uri ?: return@registerForActivityResult
             } else return@registerForActivityResult
         )
     }.launch(listOf(photo, image))
