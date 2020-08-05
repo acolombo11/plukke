@@ -41,10 +41,7 @@ object ActivityResultContracts {
         ) = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
 
         override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
-            if (resultCode == RESULT_OK) uri else {
-                uri = null
-                null
-            }
+            if (resultCode == RESULT_OK) uri else null.also{ uri = null }
 
     }
 

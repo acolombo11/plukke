@@ -66,7 +66,7 @@ class CodeBuilder(private val context: Context) {
 
     fun appendLn(vararg text: CharSequence) {
         builder.appendln()
-        repeat(currentIndentation) { builder.append("\t\t\t\t") }
+        repeat(currentIndentation) { builder.append("\t\t\t") }
         append(*text)
     }
 
