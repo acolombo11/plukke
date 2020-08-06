@@ -38,7 +38,6 @@ class DemoActivity : AppCompatActivity(R.layout.activity_demo) {
         // Examples are on multiple lines for clarity, but they lend themselves pretty well to one-liners:
         // i.e. buttonPicker.setOnClickListener { pickImage { uri -> imagePicker.load(uri) } }
         setupDemo()
-
     }
 
     private fun setupDemo() {
@@ -54,8 +53,14 @@ class DemoActivity : AppCompatActivity(R.layout.activity_demo) {
             imageCamera.alpha = 1f
         })
 
-        buttonCamera.setOnLongClickListener { true.also { imageCamera.animate().alpha(0.0f) } }
-        buttonPicker.setOnLongClickListener { true.also { imagePicker.animate().alpha(0.0f) } }
+        buttonCamera.setOnLongClickListener {
+            imageCamera.animate().alpha(0.0f).withEndAction { viewModel.clearCamera() }
+            true
+        }
+        buttonPicker.setOnLongClickListener {
+            imagePicker.animate().alpha(0.0f).withEndAction { viewModel.clearPicker() }
+            true
+        }
 
         setupDemoCodePreview()
     }
