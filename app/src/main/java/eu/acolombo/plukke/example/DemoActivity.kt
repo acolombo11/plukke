@@ -1,15 +1,14 @@
 package eu.acolombo.plukke.example
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import eu.acolombo.plukke.example.utils.CodeBuilder
-import eu.acolombo.plukke.example.utils.CodeBuilder.Code.Highlight
-import eu.acolombo.plukke.example.utils.CodeBuilder.Code.Keyword.Extension
-import eu.acolombo.plukke.example.utils.CodeBuilder.Code.Keyword.Variable
+import eu.acolombo.plukke.example.utils.CodeSequenceBuilder
+import eu.acolombo.plukke.example.utils.CodeSequenceBuilder.Code.Highlight
+import eu.acolombo.plukke.example.utils.CodeSequenceBuilder.Code.Keyword.Extension
+import eu.acolombo.plukke.example.utils.CodeSequenceBuilder.Code.Keyword.Variable
 import eu.acolombo.plukke.example.utils.load
 import eu.acolombo.plukke.pickImage
 import eu.acolombo.plukke.takePicture
@@ -39,40 +38,47 @@ class DemoActivity : AppCompatActivity(R.layout.activity_demo) {
         // Examples are on multiple lines for clarity, but they lend themselves pretty well to one-liners:
         // i.e. buttonPicker.setOnClickListener { pickImage { uri -> imagePicker.load(uri) } }
         setupDemo()
+
     }
 
     private fun setupDemo() {
         // Using a crude implementation of ViewModel just to retain state on configuration change
+        // The resulting uri from the pickers gets saved in the vm and observed below
+        // On change the uri get loaded in the target image using Glide
         viewModel.pickerResult.observe(this, Observer { uri ->
             imagePicker.load(uri)
+            imagePicker.alpha = 1f
         })
         viewModel.cameraResult.observe(this, Observer { uri ->
             imageCamera.load(uri)
+            imageCamera.alpha = 1f
         })
+
+        buttonCamera.setOnLongClickListener { true.also { imageCamera.animate().alpha(0.0f) } }
+        buttonPicker.setOnLongClickListener { true.also { imagePicker.animate().alpha(0.0f) } }
+
         setupDemoCodePreview()
     }
 
-    private fun setupDemoCodePreview() {
-        mapOf<TextView, Triple<String, String, String>>(
-            textPicker to Triple(
-                ::buttonPicker.name,
-                ComponentActivity::pickImage.name,
-                DemoViewModel::savePicker.name
-            ),
-            textCamera to Triple(
-                ::buttonCamera.name,
-                ComponentActivity::takePicture.name,
-                DemoViewModel::saveCamera.name
-            )
-        ).forEach {
-            it.key.text = CodeBuilder(this).apply {
-                append(it.value.first + ".setOnClickListener {")
-                indent(Extension(it.value.second), " { ", Highlight("uri"), " ->")
-                    indent(Variable("viewModel"), ".${it.value.third}(", Highlight("uri"), ")")
-                recess("}")
-                recess("}")
-            }.build()
-        }
+    private fun setupDemoCodePreview() = mapOf(
+        textPicker to Triple(
+            ::buttonPicker.name,
+            ComponentActivity::pickImage.name,
+            DemoViewModel::savePicker.name
+        ),
+        textCamera to Triple(
+            ::buttonCamera.name,
+            ComponentActivity::takePicture.name,
+            DemoViewModel::saveCamera.name
+        )
+    ).forEach {
+        it.key.text = CodeSequenceBuilder(this)
+            .append(it.value.first + ".setOnClickListener {")
+            .indent(Extension(it.value.second), " { ", Highlight("uri"), " ->")
+            .indent(Variable("viewModel"), ".${it.value.third}(", Highlight("uri"), ")")
+            .recess("}")
+            .recess("}")
+            .build()
     }
 
 }

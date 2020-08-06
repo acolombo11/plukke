@@ -12,10 +12,10 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.ColorUtils.setAlphaComponent
 import eu.acolombo.plukke.example.R
-import eu.acolombo.plukke.example.utils.CodeBuilder.Code.Text
+import eu.acolombo.plukke.example.utils.CodeSequenceBuilder.Code.Text
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-class CodeBuilder(private val context: Context) {
+class CodeSequenceBuilder(private val context: Context) {
 
     private val defaultColor = TextView(context).textColors.defaultColor
 
@@ -23,11 +23,14 @@ class CodeBuilder(private val context: Context) {
         class Text(text: CharSequence) : Code(text, 0xFF/2)
         class Comment(text: CharSequence) : Code(text, 0xFF/3)
         class Highlight(text: CharSequence) : Code(text, 0xFF)
-
         sealed class Keyword(text: CharSequence, @ColorRes val color: Int, val style: Int? = null) : Code(text, 0xFF) {
-            class Extension(text: CharSequence) : Keyword(text, R.color.colorExtension, Typeface.ITALIC)
-            class Variable(text: CharSequence) : Keyword(text, R.color.colorVariable)
-            class Todo(text: CharSequence) : Keyword(text, R.color.colorTodo, Typeface.ITALIC)
+            class Extension(text: CharSequence) : Keyword(text,
+                R.color.colorExtension, Typeface.ITALIC)
+            class Variable(text: CharSequence) : Keyword(text,
+                R.color.colorVariable
+            )
+            class Todo(text: CharSequence) : Keyword(text,
+                R.color.colorTodo, Typeface.ITALIC)
             class Colored(text: CharSequence, @ColorRes color: Int) : Keyword(text, color)
         }
     }
@@ -39,17 +42,17 @@ class CodeBuilder(private val context: Context) {
 
     fun clear() = builder.clear().also { currentIndentation = 0 }
 
-    fun indent(vararg text: CharSequence) {
+    fun indent(vararg text: CharSequence) = apply {
         currentIndentation++
         appendLn(*text)
     }
 
-    fun recess(vararg text: CharSequence) {
+    fun recess(vararg text: CharSequence) = apply {
         currentIndentation--
         appendLn(*text)
     }
 
-    fun append(vararg text: CharSequence) {
+    fun append(vararg text: CharSequence) = apply {
         text.forEach {
             builder.append(when (it) {
                 is Code.Keyword -> it.apply {
@@ -64,7 +67,7 @@ class CodeBuilder(private val context: Context) {
         }
     }
 
-    fun appendLn(vararg text: CharSequence) {
+    fun appendLn(vararg text: CharSequence) = apply {
         builder.appendln()
         repeat(currentIndentation) { builder.append("\t\t\t") }
         append(*text)
