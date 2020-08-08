@@ -1,13 +1,11 @@
 package eu.acolombo.plukke
 
 import android.app.Activity.RESULT_OK
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 
@@ -30,18 +28,18 @@ object ActivityResultContracts {
 
     }
 
-    // Same as ActivityResultContracts.TakePicture but without the need to pass the uri when getting the intent
-    class TakePhoto(activity: ComponentActivity) : ActivityResultContract<Unit, Uri?>() {
+    // Same as ActivityResultContracts.TakePicture but input and output are fields
+    class TakePhoto(private val input: Uri) : ActivityResultContract<Unit, Uri?>() {
 
-        var uri: Uri? = activity.contentResolver.insert(EXTERNAL_CONTENT_URI, ContentValues())
+        var output: Uri? = null
 
         override fun createIntent(
             context: Context,
             input: Unit?
-        ) = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        ) = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, this.input)
 
         override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
-            if (resultCode == RESULT_OK) uri else null.also{ uri = null }
+            input.takeIf { resultCode == RESULT_OK }.also { output = it }
 
     }
 
