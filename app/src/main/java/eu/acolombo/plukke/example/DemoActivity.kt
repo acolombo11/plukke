@@ -21,14 +21,14 @@ class DemoActivity : AppCompatActivity(R.layout.activity_demo) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Choose between taking a photo or picking from gallery using Plukke's ActivityResultContracts.Choose
+        // Choose between taking a photo or picking from gallery using PlukkeResultContracts.Choose
         buttonPicker.setOnClickListener {
             pickImage { uri ->
                 viewModel.savePicker(uri) // Do your own thing here instead
             }
         }
 
-        // Taking a photo using Ktx's ActivityResultContracts.TakePicture without the need of a FileProvider
+        // Taking a photo using ActivityResultContracts.TakePicture without the need of a FileProvider
         buttonCamera.setOnClickListener {
             takePicture { uri ->
                 viewModel.saveCamera(uri) // Do your own thing here instead
@@ -43,7 +43,7 @@ class DemoActivity : AppCompatActivity(R.layout.activity_demo) {
     private fun setupDemo() {
         // Using a crude implementation of ViewModel just to retain state on configuration change
         // The resulting uri from the pickers gets saved in the vm and observed below
-        // On change the uri get loaded in the target image using Glide
+        // On change the uri gets loaded in the target image using Glide
         viewModel.pickerResult.observe(this, Observer { uri ->
             imagePicker.load(uri)
             imagePicker.alpha = 1f

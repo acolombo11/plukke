@@ -9,7 +9,7 @@ import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 
-object ActivityResultContracts {
+object PlukkeActivityResultContracts {
 
     class Choose : ActivityResultContract<List<ActivityResultContract<*, *>>, ActivityResult>() {
 
@@ -28,18 +28,16 @@ object ActivityResultContracts {
 
     }
 
-    // Same as ActivityResultContracts.TakePicture but input and output are fields
-    class TakePhoto(private val input: Uri) : ActivityResultContract<Unit, Uri?>() {
-
-        var output: Uri? = null
+    // Same as ActivityResultContracts.TakePicture but the input uri is passed to the constructor
+    class TakePhoto(val uri: Uri) : ActivityResultContract<Unit, Uri?>() {
 
         override fun createIntent(
             context: Context,
             input: Unit?
-        ) = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, this.input)
+        ) = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
 
         override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
-            input.takeIf { resultCode == RESULT_OK }.also { output = it }
+            uri.takeIf { resultCode == RESULT_OK }
 
     }
 
@@ -50,7 +48,8 @@ object ActivityResultContracts {
             input: Unit?
         ) = Intent(Intent.ACTION_PICK, EXTERNAL_CONTENT_URI)
 
-        override fun parseResult(resultCode: Int, intent: Intent?) = intent?.data
+        override fun parseResult(resultCode: Int, intent: Intent?) : Uri? =
+            intent?.data
 
     }
 
