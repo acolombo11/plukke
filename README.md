@@ -1,10 +1,7 @@
 <p align="center"><img src="/plukke.png" style="background-color: var(--color-bg-primary);" width="400" alt="Plukke"></p>
 <p align="center">Android library to pick an image from <b>gallery</b> or <b>camera</b>.</p>
 <p align="center"><b>Super easy</b>. <b>Inline result</b>.</p>
-</br>
-<p align="center"><b>No</b> need for <b>FileProvider</b>. 
-<b>No</b> need to manage <b>user permissions</b>.
-<b>No</b> need for custom UIs or localizations.</p>
+<p align="center"><b>No</b> need for FileProvider. <b>No</b> need to manage user permissions. <b>No</b> need for custom UIs or localizations.</p>
 
 ## Download &nbsp; [![Release](https://jitpack.io/v/eu.acolombo/plukke.svg)](https://jitpack.io/#eu.acolombo/plukke)
 
