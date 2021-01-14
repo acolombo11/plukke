@@ -12,6 +12,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import eu.acolombo.plukke.PlukkeActivityResultContracts.Choose
+import eu.acolombo.plukke.PlukkeActivityResultContracts.PickImage
+import eu.acolombo.plukke.PlukkeActivityResultContracts.TakePhoto
 import java.io.Closeable
 
 class Plukke(
@@ -27,31 +29,28 @@ class Plukke(
             uri?.let { resolver.delete(it, null, null) }
         }
 
-        fun clear(): Nothing? = close().let { return null }
-
     }
 
     private val exc = ExternalContent(componentActivity.contentResolver)
 
     val uri = exc.uri
 
-    fun pickImage(onResult: (Uri) -> Unit) = componentActivity.doWithPermission {
-        val photo = uri?.let { PlukkeActivityResultContracts.TakePhoto(it) }
-        val pick = PlukkeActivityResultContracts.PickImage()
+    fun pickImage(onResult: (Uri) -> Unit) = componentActivity.doWithWritePermission {
+        val photo: TakePhoto? = uri?.let { TakePhoto(it) }
+        val pick = PickImage()
 
         componentActivity.registerForActivityResult(Choose()) { result ->
             if (result.resultCode == Activity.RESULT_OK) onResult(
-                photo?.uri
-                    ?: exc.clear()
-                    ?: result?.data?.data
-                    ?: return@registerForActivityResult
-            ) else exc.close()
+                result?.data?.data ?: photo?.uri ?: exc.close()
+                    .run { return@registerForActivityResult }
+            )
+            exc.close()
         }.launch(listOfNotNull(photo, pick))
     }
 
-    fun takePicture(onResult: (Uri) -> Unit) = componentActivity.doWithPermission {
+    fun takePicture(onResult: (Uri) -> Unit) = componentActivity.doWithWritePermission {
         uri?.let { uri ->
-            registerForActivityResult(TakePicture()) { ok ->
+            componentActivity.registerForActivityResult(TakePicture()) { ok ->
                 if (ok) onResult(uri) else exc.close()
             }.launch(uri)
         }
@@ -71,7 +70,7 @@ class Plukke(
         autoClear = clearOnDestroy
     }
 
-    private fun ComponentActivity.doWithPermission(action: ComponentActivity.() -> Unit) {
+    private fun ComponentActivity.doWithWritePermission(action: ComponentActivity.() -> Unit) {
         // Some devices don't need WRITE_EXTERNAL_STORAGE permission to be granted, so we'll just try to do what we want
         // If we can't (catch) we do it the proper way, requesting permission if needed
         // The try & catch is here to improve first time experience on some devices
