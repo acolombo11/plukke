@@ -18,7 +18,7 @@ import java.io.Closeable
 
 class Plukke(
     private val componentActivity: ComponentActivity,
-    clearOnDestroy: Boolean = false
+    clearOnDestroy: Boolean = true
 ) : LifecycleObserver, Closeable {
 
     private class ExternalContent(private val resolver: ContentResolver) : Closeable {
@@ -43,8 +43,7 @@ class Plukke(
             if (result.resultCode == Activity.RESULT_OK) onResult(
                 result?.data?.data ?: photo?.uri ?: exc.close()
                     .run { return@registerForActivityResult }
-            )
-            exc.close()
+            ) else exc.close()
         }.launch(listOfNotNull(photo, pick))
     }
 
