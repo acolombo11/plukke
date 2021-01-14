@@ -7,7 +7,7 @@
 
 Add the dependency in your app  `build.gradle` with the current version number:
 ```gradle
-implementation 'eu.acolombo:plukke:0.6'
+implementation 'eu.acolombo:plukke:0.8'
 ```
 
 Add JitPack in your root `build.gradle`:
