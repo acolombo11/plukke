@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package eu.acolombo.plukke
 
 import android.content.ClipData

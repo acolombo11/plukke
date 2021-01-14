@@ -44,12 +44,12 @@ class CodeSequenceBuilder(private val context: Context) {
 
     fun indent(vararg text: CharSequence) = apply {
         currentIndentation++
-        appendLn(*text)
+        appendLine(*text)
     }
 
     fun recess(vararg text: CharSequence) = apply {
         currentIndentation--
-        appendLn(*text)
+        appendLine(*text)
     }
 
     fun append(vararg text: CharSequence) = apply {
@@ -67,8 +67,8 @@ class CodeSequenceBuilder(private val context: Context) {
         }
     }
 
-    fun appendLn(vararg text: CharSequence) = apply {
-        builder.appendln()
+    fun appendLine(vararg text: CharSequence) = apply {
+        builder.appendLine()
         repeat(currentIndentation) { builder.append("\t\t\t") }
         append(*text)
     }

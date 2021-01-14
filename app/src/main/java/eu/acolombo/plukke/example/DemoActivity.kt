@@ -44,14 +44,14 @@ class DemoActivity : AppCompatActivity(R.layout.activity_demo) {
         // Using a crude implementation of ViewModel just to retain state on configuration change
         // The resulting uri from the pickers gets saved in the vm and observed below
         // On change the uri gets loaded in the target image using Glide
-        viewModel.pickerResult.observe(this, Observer { uri ->
+        viewModel.pickerResult.observe(this) { uri ->
             imagePicker.load(uri)
             imagePicker.alpha = 1f
-        })
-        viewModel.cameraResult.observe(this, Observer { uri ->
+        }
+        viewModel.cameraResult.observe(this) { uri ->
             imageCamera.load(uri)
             imageCamera.alpha = 1f
-        })
+        }
 
         buttonCamera.setOnLongClickListener {
             imageCamera.animate().alpha(0.0f).withEndAction { viewModel.clearCamera() }
